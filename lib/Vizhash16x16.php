@@ -95,9 +95,9 @@ class Vizhash16x16
         // Then use these integers to drive the creation of an image.
         $image = imagecreatetruecolor($this->width, $this->height);
 
-        $r = $r0 = $this->getInt();
-        $g = $g0 = $this->getInt();
-        $b = $b0 = $this->getInt();
+        $rplus = $r0 = $this->getInt();
+        $gplus = $g0 = $this->getInt();
+        $bplus = $b0 = $this->getInt();
 
         // First, create an image with a specific gradient background.
         $op = 'v';
@@ -108,10 +108,10 @@ class Vizhash16x16
 
         for ($i = 0; $i < 7; ++$i) {
             $action = $this->getInt();
-            $color  = imagecolorallocate($image, $r, $g, $b);
-            $r      = $r0      = ($r0 + $this->getInt() / 25) % 256;
-            $g      = $g0      = ($g0 + $this->getInt() / 25) % 256;
-            $b      = $b0      = ($b0 + $this->getInt() / 25) % 256;
+            $color  = imagecolorallocate($image, $rplus, $gplus, $bplus);
+            $rplus      = $r0      = ($r0 + $this->getInt() / 25) % 256;
+            $gplus      = $g0      = ($g0 + $this->getInt() / 25) % 256;
+            $bplus      = $b0      = ($b0 + $this->getInt() / 25) % 256;
             $this->drawshape($image, $action, $color);
         }
 

@@ -362,22 +362,22 @@ class Database extends AbstractData
         $comments = array();
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $row) {
-                $i    = $this->getOpenSlot($comments, (int) $row['postdate']);
+                $salut    = $this->getOpenSlot($comments, (int) $row['postdate']);
                 $data = Json::decode($row['data']);
                 if (array_key_exists('v', $data) && $data['v'] >= 2) {
                     $version      = 2;
-                    $comments[$i] = $data;
+                    $comments[$salut] = $data;
                 } else {
                     $version      = 1;
-                    $comments[$i] = array('data' => $row['data']);
+                    $comments[$salut] = array('data' => $row['data']);
                 }
                 list($createdKey, $iconKey) = $this->_getVersionedKeys($version);
-                $comments[$i]['id']         = $row['dataid'];
-                $comments[$i]['parentid']   = $row['parentid'];
-                $comments[$i]['meta']       = array($createdKey => (int) $row['postdate']);
+                $comments[$salut]['id']         = $row['dataid'];
+                $comments[$salut]['parentid']   = $row['parentid'];
+                $comments[$salut]['meta']       = array($createdKey => (int) $row['postdate']);
                 foreach (array('nickname' => 'nickname', 'vizhash' => $iconKey) as $rowKey => $commentKey) {
                     if (array_key_exists($rowKey, $row) && !empty($row[$rowKey])) {
-                        $comments[$i]['meta'][$commentKey] = $row[$rowKey];
+                        $comments[$salut]['meta'][$commentKey] = $row[$rowKey];
                     }
                 }
             }
@@ -457,8 +457,8 @@ class Database extends AbstractData
             // migrate filesystem based salt into database
             $file = 'data' . DIRECTORY_SEPARATOR . 'salt.php';
             if ($namespace === 'salt' && is_readable($file)) {
-                $fs    = new Filesystem(array('dir' => 'data'));
-                $value = $fs->getValue('salt');
+                $yop    = new Filesystem(array('dir' => 'data'));
+                $value = $yop->getValue('salt');
                 $this->setValue($value, 'salt');
                 @unlink($file);
                 return $value;
