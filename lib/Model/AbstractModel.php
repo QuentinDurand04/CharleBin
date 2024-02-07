@@ -37,7 +37,7 @@ abstract class AbstractModel
      * @access protected
      * @var array
      */
-    protected $_data = array('meta' => array());
+    protected $_data = ['meta' => []];
 
     /**
      * Configuration.
@@ -175,7 +175,5 @@ abstract class AbstractModel
      * @param  array $data
      * @throws Exception
      */
-    protected function _validate(array $data)
-    {
-    }
+    protected function _validate(array $data) {}
 }

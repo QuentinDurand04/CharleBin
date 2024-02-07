@@ -33,7 +33,7 @@ class Filesystem extends AbstractData
      * @link  https://man7.org/linux/man-pages/man7/glob.7.html
      * @const string
      */
-    const PASTE_FILE_PATTERN = DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' .
+    public const PASTE_FILE_PATTERN = DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' .
         DIRECTORY_SEPARATOR . '[a-f0-9][a-f0-9]' . DIRECTORY_SEPARATOR .
         '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]' .
         '[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*';
@@ -43,14 +43,14 @@ class Filesystem extends AbstractData
      *
      * @const string
      */
-    const PROTECTION_LINE = '<?php http_response_code(403); /*';
+    public const PROTECTION_LINE = '<?php http_response_code(403); /*';
 
     /**
      * line in generated .htaccess files, to protect exposed directories from being browsable on apache web servers
      *
      * @const string
      */
-    const HTACCESS_LINE = 'Require all denied';
+    public const HTACCESS_LINE = 'Require all denied';
 
     /**
      * path in which to persist something
@@ -94,7 +94,7 @@ class Filesystem extends AbstractData
             return false;
         }
         if (!is_dir($storagedir)) {
-            mkdir($storagedir, 0700, true);
+            mkdir($storagedir, 0o700, true);
         }
         return $this->_store($file, $paste);
     }
@@ -197,7 +197,7 @@ class Filesystem extends AbstractData
             return false;
         }
         if (!is_dir($storagedir)) {
-            mkdir($storagedir, 0700, true);
+            mkdir($storagedir, 0o700, true);
         }
         return $this->_store($file, $comment);
     }
@@ -211,7 +211,7 @@ class Filesystem extends AbstractData
      */
     public function readComments($pasteid)
     {
-        $comments = array();
+        $comments = [];
         $discdir  = $this->_dataid2discussionpath($pasteid);
         if (is_dir($discdir)) {
             $dir = dir($discdir);
@@ -229,7 +229,8 @@ class Filesystem extends AbstractData
 
                     // Store in array
                     $key            = $this->getOpenSlot(
-                        $comments, (
+                        $comments,
+                        (
                             (int) array_key_exists('created', $comment['meta']) ?
                             $comment['meta']['created'] : // v2 comments
                             $comment['meta']['postdate'] // v1 comments
@@ -362,7 +363,7 @@ class Filesystem extends AbstractData
      */
     protected function _getExpiredPastes($batchsize)
     {
-        $pastes = array();
+        $pastes = [];
         $count  = 0;
         $opened = 0;
         $limit  = $batchsize * 10; // try at most 10 times $batchsize pastes before giving up
@@ -394,7 +395,7 @@ class Filesystem extends AbstractData
      */
     public function getAllPastes()
     {
-        $pastes = array();
+        $pastes = [];
         foreach (new \GlobIterator($this->_path . self::PASTE_FILE_PATTERN) as $file) {
             if ($file->isFile()) {
                 $pastes[] = $file->getBasename('.php');
@@ -471,7 +472,7 @@ class Filesystem extends AbstractData
     {
         // Create storage directory if it does not exist.
         if (!is_dir($this->_path)) {
-            if (!@mkdir($this->_path, 0700)) {
+            if (!@mkdir($this->_path, 0o700)) {
                 return false;
             }
         }
@@ -505,7 +506,7 @@ class Filesystem extends AbstractData
         if ($fileCreated === false || $writtenBytes === false || $writtenBytes < strlen($data)) {
             return false;
         }
-        @chmod($filename, 0640); // protect file from access by other users on the host
+        @chmod($filename, 0o640); // protect file from access by other users on the host
         return true;
     }
 
